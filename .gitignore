@@ -1,0 +1,39 @@
+# Dev environment variables
+.env
+
+# Dependency files
+node_modules
+
+package-lock.json
+
+# Debug logs
+npm-debug.log
+
+# Build files
+build/
+dist/
+lib/
+
+# Sass Cache
+.sass-cache/
+
+# Packages
+*-*.tgz
+
+# Docs
+doc/
+*_docs.tar.gz
+lerna-debug.log
+
+# Reports
+reports*
+coverage.xml
+coverage/
+acceptance/results/
+acceptance/cypress/screenshots/
+acceptance/cypress/videos/
+
+# jsLingui
+app/locale/_build/
+app/locale/**/*.js
+
