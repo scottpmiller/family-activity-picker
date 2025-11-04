@@ -54,6 +54,7 @@ export async function handler(event, context) {
         link: body.link || null,
         image_url: body.image_url || null,
         trip_id: body.trip_id || null,
+        completed: body.completed ?? false,
       };
       const { data, error } = await supabase.from('activities').insert(payload).select().single();
       if (error) return json(500, { error: error.message });
@@ -67,6 +68,7 @@ export async function handler(event, context) {
         description: body.description ?? undefined,
         link: body.link ?? undefined,
         image_url: body.image_url ?? undefined,
+        completed: body.completed ?? undefined,
       };
       const { data, error } = await supabase.from('activities').update(payload).eq('id', id).select().single();
       if (error) return json(500, { error: error.message });

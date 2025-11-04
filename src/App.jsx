@@ -298,7 +298,7 @@ export default function App(){
           
           <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
             <ActivityForm
-              initial={selectedActivity || { title: '', description: '', link: '', image_url: '' }}
+              initial={selectedActivity || { title: '', description: '', link: '', image_url: '', completed: false }}
               trip={trip}
               onSave={saveActivity}
             />
@@ -324,13 +324,18 @@ export default function App(){
 
 function ActivityCard({ a, selected, onToggle, onEdit, pickedBy, disabled }){
   return (
-    <article className="card flex flex-col gap-3">
+    <article className="card flex flex-col gap-3" style={{ opacity: a.completed ? 0.6 : 1 }}>
       {a.image_url ? (
         <img src={a.image_url} alt="" className="rounded-xl h-40 w-full object-cover border border-slate-200" />
       ) : null}
       <div className="flex items-start justify-between gap-2">
         <div className="pr-2">
-          <h3 className="text-lg font-bold">{a.title || 'Untitled activity'}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-bold" style={{ textDecoration: a.completed ? 'line-through' : 'none' }}>
+              {a.title || 'Untitled activity'}
+            </h3>
+            {a.completed && <span className="text-green-600 text-xl">✓</span>}
+          </div>
           <p className="text-slate-600 text-sm">{a.description || ''}</p>
           {a.link ? (
             <a className="text-indigo-700 underline text-sm" href={a.link} target="_blank" rel="noreferrer">Learn more ↗</a>
@@ -398,12 +403,14 @@ function ActivityForm({ initial, trip, onSave }){
   const [description, setDescription] = useState(initial.description || '')
   const [link, setLink] = useState(initial.link || '')
   const [image_url, setImageUrl] = useState(initial.image_url || '')
+  const [completed, setCompleted] = useState(initial.completed || false)
 
   useEffect(() => {
     setTitle(initial.title || '')
     setDescription(initial.description || '')
     setLink(initial.link || '')
     setImageUrl(initial.image_url || '')
+    setCompleted(initial.completed || false)
   }, [initial])
 
   return (
@@ -416,15 +423,27 @@ function ActivityForm({ initial, trip, onSave }){
       <input className="input" value={link} onChange={e => setLink(e.target.value)} placeholder="https://..." />
       <label className="label">Image URL (optional)</label>
       <input className="input" value={image_url} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." />
+      <Box sx={{ pt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+        <label className="flex items-center gap-2 select-none cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-4 w-4"
+            checked={completed}
+            onChange={e => setCompleted(e.target.checked)}
+          />
+          <span className="text-sm">Mark as completed</span>
+        </label>
+      </Box>
       <Box sx={{ pt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={() => onSave({
-             title: title.trim(), 
-             description: description.trim(), 
-             link: link.trim(), 
-             image_url: image_url.trim(), 
-             trip_id: trip.id 
+             title: title.trim(),
+             description: description.trim(),
+             link: link.trim(),
+             image_url: image_url.trim(),
+             trip_id: trip.id,
+             completed: completed
           })}
         >
           Save
