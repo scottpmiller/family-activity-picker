@@ -89,7 +89,17 @@ export async function handler(event, context) {
     if (!supabase) return notConfigured();
 
     if (httpMethod === 'GET') {
-      const { data, error } = await supabase.from('selections').select('*').eq('trip_id', fixedId);
+      const { data, error } = await supabase.from('selections').select(
+        `
+        id,
+        activity_id,
+        selected,
+        updated_at,
+        attendee_id,
+        attendees!inner ( id, trip_id )
+        `
+        )
+        .eq('attendee.trip_id', fixedId);
       if (error) return json(500, { error: error.message });
       return json(200, data);
     }
