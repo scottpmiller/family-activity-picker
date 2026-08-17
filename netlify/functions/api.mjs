@@ -23,6 +23,7 @@ function notConfigured() {
 }
 
 export async function handler(event, context) {
+  const fixedId = '00000000-0000-0000-0000-000000000002';
   const { httpMethod, path, queryStringParameters } = event;
   const segments = path.split('/').slice(4);
 
@@ -42,7 +43,7 @@ export async function handler(event, context) {
     if (!supabase) return notConfigured();
 
     if (httpMethod === 'GET' && segments.length === 1) {
-      const { data, error } = await supabase.from('activities').select('*').order('created_at', { ascending: true });
+      const { data, error } = await supabase.from('activities').select('*').eq('trip_id', fixedId).order('created_at', { ascending: true });
       if (error) return json(500, { error: error.message });
       return json(200, data);
     }
@@ -88,7 +89,7 @@ export async function handler(event, context) {
     if (!supabase) return notConfigured();
 
     if (httpMethod === 'GET') {
-      const { data, error } = await supabase.from('selections').select('*');
+      const { data, error } = await supabase.from('selections').select('*').eq('trip_id', fixedId);
       if (error) return json(500, { error: error.message });
       return json(200, data);
     }
@@ -104,7 +105,6 @@ export async function handler(event, context) {
 
   if (segments[0] === 'trip') {
     if (!supabase) return notConfigured();
-    const fixedId = '00000000-0000-0000-0000-000000000001';
 
     if (httpMethod === 'GET') {
       let { data, error } = await supabase.from('trip').select('*').eq('id', fixedId).maybeSingle();
@@ -130,7 +130,7 @@ export async function handler(event, context) {
     if (!supabase) return notConfigured();
 
     if (httpMethod === 'GET' && segments.length === 1) {
-      const { data, error } = await supabase.from('attendees').select('*').order('created_at', { ascending: true });
+      const { data, error } = await supabase.from('attendees').select('*').eq('trip_id', fixedId).order('created_at', { ascending: true });
       if (error) return json(500, { error: error.message });
       return json(200, data);
     }
