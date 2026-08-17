@@ -100,6 +100,7 @@ export async function handler(event, context) {
         `
         )
         .eq('attendee.trip_id', fixedId);
+      console.log(error);
       if (error) return json(500, { error: error.message });
       return json(200, data);
     }
