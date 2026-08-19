@@ -99,8 +99,7 @@ export async function handler(event, context) {
         attendees!inner ( id, trip_id )
         `
         )
-        .eq('attendee.trip_id', fixedId);
-      console.log(error);
+        .eq('attendees.trip_id', fixedId);
       if (error) return json(500, { error: error.message });
       return json(200, data);
     }
